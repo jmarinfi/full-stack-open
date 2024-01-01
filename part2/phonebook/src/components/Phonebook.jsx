@@ -62,4 +62,16 @@ const Persons = ({ persons, handleDelete }) => {
     )
 }
 
-export { Filter, FormPerson, Persons }
+const Notification = ({ message, type }) => {
+    if (message === null) {
+        return null
+    }
+
+    return (
+        <div className={type}>
+            {message}
+        </div>
+    )
+}
+
+export { Filter, FormPerson, Persons, Notification }
