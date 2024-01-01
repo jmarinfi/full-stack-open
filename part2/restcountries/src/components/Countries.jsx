@@ -16,19 +16,22 @@ const Country = ({ country }) => {
     )
 }
 
-const CountryShort = ({ country }) => {
+const CountryShort = ({ country, handleClick }) => {
     return (
         <div>
             {country.name.common}
-            <button>show</button>
+            <button value={country.name.common} onClick={handleClick}>show</button>
         </div>
     )
 }
 
-const Countries = ({ countries }) => {
+const Countries = ({ countries, handleClick }) => {
     return (
         <>
-            {countries.map(country => <CountryShort key={country.name.common} country={country} />)}
+            {countries.map(country => <CountryShort
+                key={country.name.common}
+                country={country}
+                handleClick={handleClick} />)}
         </>
     )
 }

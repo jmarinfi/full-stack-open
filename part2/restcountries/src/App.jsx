@@ -17,6 +17,11 @@ const App = () => {
     setCountry(event.target.value)
   }
 
+  const showCountry = (event) => {
+    console.log(event.target.value)
+    setCountry(countries.find(count => count.name.common === event.target.value).name.common)
+  }
+
   const countriesToShow = country
     ? countries.filter(count => count.name.common.toLowerCase().includes(country.toLowerCase()))
     : []
@@ -46,7 +51,7 @@ const App = () => {
           onChange={handleChange} />
       </div>
       <div>
-        <Countries countries={countriesToShow} />
+        <Countries countries={countriesToShow} handleClick={showCountry} />
       </div>
     </div>
 
