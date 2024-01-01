@@ -21,8 +21,17 @@ const App = () => {
     }
 
     if (persons.map(person => person.name).includes(newName)) {
-      alert(`${newName} is already added to phonebook`)
-      return
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const id = persons.find(person => person.name === newName).id
+        personService
+          .update(id, personObject)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+            setNewName('')
+            setNewNumber('')
+          })
+        return
+      }
     }
 
     personService
@@ -31,6 +40,14 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+      })
+  }
+
+  const handleDelete = id => {
+    personService
+      .deletePerson(id)
+      .then(() => {
+        setPersons(persons.filter(person => person.id !== id))
       })
   }
 
@@ -48,7 +65,9 @@ const App = () => {
         onChangeName={(event) => setNewName(event.target.value)}
         newNumber={newNumber}
         onChangeNumber={(event) => setNewNumber(event.target.value)} />
-      <Persons persons={personsToShow} />
+      <Persons
+        persons={personsToShow}
+        handleDelete={handleDelete} />
     </div>
   )
 }

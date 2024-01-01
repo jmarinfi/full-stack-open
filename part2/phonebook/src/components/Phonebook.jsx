@@ -1,3 +1,4 @@
+import personService from '../services/persons'
 
 const Filter = ({ filter, onChange }) => {
     return (
@@ -33,17 +34,30 @@ const FormPerson = ({ onSubmit, newName, onChangeName, newNumber, onChangeNumber
     )
 }
 
-const Person = ({ person }) => {
+const Person = ({ person, handleDelete }) => {
     return (
-        <div>{person.name} {person.number}</div>
+        <div>
+            {person.name} {person.number}
+            <button onClick={
+                () => {
+                    if (window.confirm(`Delete ${person.name}?`)) {
+                        handleDelete(person.id)
+                    }
+                }
+            }>delete</button>
+        </div>
     )
 }
 
-const Persons = ({ persons }) => {
+const Persons = ({ persons, handleDelete }) => {
     return (
         <div>
             <h2>Numbers</h2>
-            {persons.map(person => <Person key={person.name} person={person} />)}
+            {persons.map(
+                person => <Person 
+                    key={person.name} 
+                    person={person} 
+                    handleDelete={handleDelete} />)}
         </div>
     )
 }
