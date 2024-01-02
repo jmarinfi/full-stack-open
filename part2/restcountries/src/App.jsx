@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Countries, Country } from './components/Countries'
+import CountryList, {CountryDetails} from './components/Countries'
 
 const App = () => {
-  const [country, setCountry] = useState('')
+  const [searchCountry, setSearchCountry] = useState('')
   const [countries, setCountries] = useState([])
+  const [selectedCountry, setSelectedCountry] = useState(null)
 
   useEffect(() => {
     axios.get('https://studies.cs.helsinki.fi/restcountries/api/all')
@@ -13,48 +14,30 @@ const App = () => {
       })
   }, [])
 
-  const handleChange = (event) => {
-    setCountry(event.target.value)
-  }
-
-  const showCountry = (event) => {
-    console.log(event.target.value)
-    setCountry(countries.find(count => count.name.common === event.target.value).name.common)
-  }
-
-  const countriesToShow = country
-    ? countries.filter(count => count.name.common.toLowerCase().includes(country.toLowerCase()))
+  const countriesToShow = searchCountry
+    ? countries.filter(country =>
+      country.name.common.toLowerCase().includes(searchCountry.toLowerCase()))
     : []
 
-  if (countriesToShow.length === 1) {
-    return (
-      <div>
-        <div>
-          find countries <input
-            id='input-country'
-            value={country}
-            onChange={handleChange} />
-        </div>
-        <div>
-          <Country country={countriesToShow[0]} />
-        </div>
-      </div>
-    )
+  const handleSearchChange = (event) => {
+    setSelectedCountry(null)
+    setSearchCountry(event.target.value)
+  }
+
+  const handleShowCountry = (country) => {
+    setSelectedCountry(country)
   }
 
   return (
     <div>
-      <div>
-        find countries <input
-          id='input-country'
-          value={country}
-          onChange={handleChange} />
-      </div>
-      <div>
-        <Countries countries={countriesToShow} handleClick={showCountry} />
-      </div>
+      find countries <input
+        value={searchCountry}
+        onChange={handleSearchChange} />
+      {selectedCountry
+        ? <CountryDetails country={selectedCountry} />
+        : <CountryList countries={countriesToShow} onShowCountry={handleShowCountry} />
+      }
     </div>
-
   )
 }
 
